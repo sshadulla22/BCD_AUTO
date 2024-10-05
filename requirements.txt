@@ -1,5 +1,4 @@
-opencv-python
-streamlit
-opencv-python
+opencv-python-headless
 numpy
 scikit-image
+streamlit
