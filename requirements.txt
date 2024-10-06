@@ -1,4 +1,5 @@
-opencv-python-headless
-numpy
-scikit-image
 streamlit
+opencv-python-headless
+scikit-image
+numpy
+aiohttp
