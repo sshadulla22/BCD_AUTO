@@ -6,6 +6,13 @@ import aiohttp
 import asyncio
 import base64
 
+#packages for Model
+from tensorflow.keras.models import load_model
+from tensorflow.keras.preprocessing import image
+import numpy as np
+from PIL import Image
+
+
 # Placeholder for loading your content moderation model
 # from your_moderation_library import load_model
 # model = load_model('path_to_your_model')
@@ -308,6 +315,74 @@ def moderate_image(image):
     result = 'acceptable'  # Mock result for illustration purposes
     return result
 
+
+
+def prepare_image_from_pil(pil_img):
+    # Convert the PIL image to grayscale if it isn't already
+    pil_img = pil_img.convert('L')  # 'L' mode is for grayscale
+
+    # Resize the image to the required size (30x30)
+    pil_img = pil_img.resize((30, 30))
+
+    # Convert the image to a NumPy array
+    img_array = np.array(pil_img)
+
+    # Normalize the image to [0, 1] range
+    img_array = img_array / 255.0
+
+    # Reshape to match the input shape required by Conv1D: (1, 30, 1)
+    img_array = np.expand_dims(img_array, axis=-1)  # Add the channel dimension
+    img_array = np.expand_dims(img_array, axis=0)   # Add the batch dimension
+
+    return img_array
+
+from PIL import Image
+import numpy as np
+from tensorflow.keras.preprocessing import image
+from tensorflow.keras.models import load_model
+import streamlit as st
+
+# Function to prepare the image from PIL
+def prepare_image_from_pil(pil_img):
+    # Check if the input is a numpy array
+    if isinstance(pil_img, np.ndarray):
+        # Convert the NumPy array to a PIL Image
+        pil_img = Image.fromarray(pil_img)
+
+    # Convert to grayscale
+    pil_img = pil_img.convert('L')  # 'L' mode is for grayscale
+
+    # Resize the image if necessary (e.g., to 30x30)
+    pil_img = pil_img.resize((30, 30))
+
+    # Convert the image to an array
+    img_array = np.array(pil_img)
+
+    # Flatten the image from 2D to 1D (30 features)
+    img_array = np.mean(img_array, axis=1)  # Taking mean over rows to reduce 2D to 1D
+
+    # Normalize the image to [0, 1] range
+    img_array = img_array / 255.0
+
+    # Reshape to match the input shape required by Conv1D: (1, 30, 1) where 1 is the batch size
+    img_array = np.expand_dims(img_array, axis=-1)  # Add the channel dimension
+    img_array = np.expand_dims(img_array, axis=0)   # Add the batch dimension
+
+    return img_array
+
+# Function to predict cancer
+def predict_cancer_from_pil(pil_img):
+    model = load_model('breast_cancer_model.keras')
+    processed_image = prepare_image_from_pil(pil_img)
+
+    # Get model prediction (sigmoid output gives probabilities)
+    prediction = model.predict(processed_image)
+
+    # Extract the scalar value from the array
+    prediction = prediction[0][0]
+
+    return prediction
+
 def main():
     st.title("Breast Image Processing Application")  # Title of the application
     
@@ -371,11 +446,9 @@ def main():
         # Show highest dense region image side by side
         with col4:
             st.image(breast_area, caption='Breast Area', use_column_width=True) 
-
+            
         with col5:
             st.image(highest_dense_image, caption="Highest Dense Region", use_column_width=True)
-
-       
 
         # Perform moderation with loading animation
         with st.spinner("Processing your request..."):
@@ -383,7 +456,15 @@ def main():
         
         st.success("Moderation complete!")  # Display success message
         st.write(f'Moderation Result: {moderation_result}')  # Show the moderation result
+                        
+            # Make prediction
+        prediction = predict_cancer_from_pil(breast_area)
 
+            # Display the prediction result
+        if prediction >= 0.5:
+            st.success(f"The mammogram is classified as Malignant (Cancer) with a confidence of {prediction * 100:.2f}%.")
+        else:
+            st.success(f"The mammogram is classified as Benign (No Cancer) with a confidence of {(1 - prediction) * 100:.2f}%.")
+                
 if __name__ == "__main__":
     main()  # Run the main function     also show the highest dense region  
-
