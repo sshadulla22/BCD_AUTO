@@ -3,3 +3,5 @@ opencv-python-headless
 scikit-image
 numpy
 aiohttp
+tensorflow
+pillow
