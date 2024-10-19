@@ -396,6 +396,8 @@ def main():
             - **Pectoral Muscle Removal**: This step will automatically detect and remove the pectoral muscle region from the image.
             - **Dense Tissue Detection**: The app will analyze the image for regions with dense breast tissue, which are of interest for diagnosis.
             - **Contours**: The app will outline dense and high-intensity regions with colored contours.
+            - **Cancer Detection **: Cancer Detection Model Integrated with Stages(No Cancer, Benign, Malignant.
+            
         3. Scroll through the results to see each processing step.
         """)
     
