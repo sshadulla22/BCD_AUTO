@@ -464,9 +464,9 @@ def main():
 
             # Display the prediction result
         if prediction >= 0.5:
-            st.success(f"The mammogram is classified as Malignant (Cancer) with a confidence of {prediction * 100:.2f}%.")
+            st.success(f"The mammogram is classified as Malignant (Cancer)")
         else:
-            st.success(f"The mammogram is classified as Benign (No Cancer) with a confidence of {(1 - prediction) * 100:.2f}%.")
+            st.success(f"The mammogram is classified as Benign (No Cancer)")
                 
 if __name__ == "__main__":
     main()  # Run the main function     also show the highest dense region  
