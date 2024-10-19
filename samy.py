@@ -384,7 +384,7 @@ def predict_cancer_from_pil(pil_img):
     return prediction
 
 def main():
-    st.title("Breast Image Processing Application")  # Title of the application
+    st.title("Automated Pectoral Muscle Removal & Cancer Detection")  # Title of the application
     
     # Instructions for users
     with st.expander("Click here for instructions on how to use the application"):
