@@ -1,4 +1,5 @@
 # Automated Pectoral Muscle Removal & Cancer Detection
+## BCD PROJECT - 02
 
 This project provides a comprehensive solution for preprocessing mammogram images, specifically focusing on the removal of the pectoral muscle to enhance the image quality. 
 The enhanced images are then used for breast cancer detection using machine learning and AI models. This tool is built with a user-friendly interface using Streamlit, designed to help radiologists and medical professionals in early detection.
